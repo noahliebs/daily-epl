@@ -1,0 +1,51 @@
+from soccer_player import SoccerPlayer
+from guess_proximity import *
+from epl_table import EPLTable
+from hint_config import HintConfig
+import pandas as pd
+
+class GuessHistory(object):
+    
+    def __init__(self, hint_config: HintConfig):
+        self.guesses = []
+        self.hint_config = hint_config
+        
+        
+    def add_guess(self, guess: SoccerPlayer):
+        if guess.get_display_name() not in [g.get_display_name() for g in self.guesses]:
+            self.guesses.append(guess)
+            return True
+        else:
+            return False
+        
+    def guess_header(self):
+        return ["Name", "Team", "Country", "Position", "Age", "Jersey", "Goals", "Assists", "Appearances"]
+        
+    def guess_to_data(self, guess: SoccerPlayer):
+        return [guess.get_display_name(), guess.team, guess.get_country(), guess.position, guess.get_age(), guess.jersey, guess.goals, guess.assists, guess.appearances]
+    
+    
+    def guess_to_hint(self, answer: SoccerPlayer, guess: SoccerPlayer, epl_table: EPLTable, conderation_mapping: dict):
+        name_code = get_exact_match_code(answer.get_display_name(), guess.get_display_name())
+        team_hint = get_team_code(answer, guess, epl_table, self.hint_config.team_d)
+        position_hint = get_position_code(answer, guess)
+        goal_hint = get_goals_code(answer, guess, self.hint_config.goal_d)
+        assist_hint = get_assists_code(answer, guess, self.hint_config.assist_d)
+        app_hint = get_appearances_code(answer, guess, self.hint_config.app_d)
+        country_hint = get_country_code(answer, guess, conderation_mapping)
+        age_hint = get_age_code(answer, guess, self.hint_config.age_d)
+        jersey_hint = get_jersey_code(answer, guess, self.hint_config.jersey_d)
+        
+        return [name_code, team_hint, country_hint, position_hint, age_hint, jersey_hint, goal_hint, assist_hint, app_hint]
+    
+    
+    def print_history(self, answer: SoccerPlayer, epl_table: EPLTable, conderation_mapping: dict):
+        table = [self.guess_header()]
+        for g in self.guesses:
+            table.append(self.guess_to_data(g))
+            table.append(self.guess_to_hint(answer, g, epl_table, conderation_mapping))
+            
+        
+        l1, l2 = len(table), len(table[0])
+        pd.set_option('expand_frame_repr', False)
+        print(pd.DataFrame(table, index=['']*l1, columns=['']*l2))

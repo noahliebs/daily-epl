@@ -35,7 +35,7 @@ Bulgaria,UEFA,1923,1924
 Cambodia,AFC,1933,1954
 Canada,CONCACAF,1912,1913
 Cayman Islands,CONCACAF,1966,1992
-Congo, Republic of the,CAF,1962,1964
+Republic of the Congo,CAF,1962,1964
 Chad,CAF,1962,1964
 Chile,CONMEBOL,1895,1913
 China PR,AFC,1924,1931
@@ -98,7 +98,7 @@ Japan,AFC,1921,1929
 Kazakhstan,UEFA,1914,1994
 Kenya,CAF,1960,1960
 Kyrgyzstan,AFC,1992,1994
-Korea, South,AFC,1928,1948
+South Korea,AFC,1928,1948
 Saudi Arabia,AFC,1956,1956
 Kuwait,AFC,1952,1964
 Laos,AFC,1951,1952
@@ -136,7 +136,6 @@ Netherlands,UEFA,1889,1904
 Nepal,AFC,1951,1972
 Nigeria,CAF,1945,1960
 Niger,CAF,1961,1964
-Ireland,UEFA,1880,1911
 Norway,UEFA,1902,1908
 New Zealand,OFC,1891,1948
 Oman,AFC,1978,1980
@@ -149,7 +148,7 @@ West Bank,AFC,1928/62,1998
 Papua New Guinea,OFC,1962,1966
 Poland,UEFA,1919,1923
 Portugal,UEFA,1914,1923
-Korea, North,AFC,1945,1958
+North Korea,AFC,1945,1958
 Puerto Rico,CONCACAF,1940,1960
 Qatar,AFC,1960,1972
 Romania,UEFA,1909,1923
@@ -208,3 +207,8 @@ Yemen,AFC,1962,1980
 Zambia,CAF,1929,1964
 Zimbabwe,CAF,1965,1965
 United Kingdom,UEFA,1863,1910
+Bosnia & Herzegovina,UEFA,NA,NA
+Northern Ireland,UEFA,NA,NA
+DR Congo,CAF,NA,NA
+Cote D’Ivoire,CAF,1960,1964
+Kosovo,UEFA,NA,NA
