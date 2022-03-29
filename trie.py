@@ -10,7 +10,7 @@ class TrieNode(object):
         self.children = []
         # Is it the last character of the word.
         self.word_finished = False
-        # How many times this character appeared in the addition process
+        # Store the full names as a list
         self.value = []
     
 
@@ -36,7 +36,7 @@ class TrieNode(object):
                 node.children.append(new_node)
                 # And then point node to the new child
                 node = new_node
-        # Everything finished. Mark it as the end of a word.
+        # Everything finished. Mark it as the end of a word and store the full value
         node.word_finished = True
         node.value.append(value)
 
@@ -45,7 +45,7 @@ class TrieNode(object):
         """
         Check and return 
           1. If the prefix exsists in any of the words we added so far
-          2. If yes then how may words actually have the prefix
+          2. If yes then return the set of all "full" words
         """
         prefix = self.normalize_search_string(raw_prefix)
         node = self
@@ -63,7 +63,7 @@ class TrieNode(object):
                     # Assign node as the child containing the char and break
                     node = child
                     break
-            # Return False anyway when we did not find a char.
+            # Return empty set when we did not find a char.
             if char_not_found:
                 return set()
 
