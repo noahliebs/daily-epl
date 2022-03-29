@@ -70,6 +70,9 @@ class TrieNode(object):
         ## Now that we have the node, let's get all leaf nodes
         ## TO DO: If exact match, ignore partial matches --> Remove once dropdown is added
         if node.word_finished:
+            for v in node.value:
+                if self.normalize_search_string(v) == self.normalize_search_string(raw_prefix):
+                    return set([v])
             return set(node.value)
 
         def dfs(nested_prefix, node):

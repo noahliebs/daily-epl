@@ -2,8 +2,8 @@ import json
 
 class EPLTable(object):
     
-    def __init__(self):
-        with open("epl_table.json", "r") as f:
+    def __init__(self, epl_table_file_location):
+        with open(epl_table_file_location, "r") as f:
             self.table = json.loads(f.read())
             
         self.standings = [t["team"]["name"] for t in self.table]

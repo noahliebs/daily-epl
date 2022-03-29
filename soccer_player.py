@@ -16,6 +16,7 @@ class SoccerPlayer(object):
         self.position = raw_value["position"]
         self.jersey = raw_value["number"]
         self.id = raw_value["id"]
+        self.opta_id = raw_value["optaId"]
         self.raw = raw_value ## Retain all raw data
         
         
