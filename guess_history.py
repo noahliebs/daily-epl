@@ -2,6 +2,7 @@ from soccer_player import SoccerPlayer
 from guess_proximity import *
 from epl_table import EPLTable
 from hint_config import HintConfig
+from photo_helper import display_player_photo
 import pandas as pd
 
 class GuessHistory(object):
