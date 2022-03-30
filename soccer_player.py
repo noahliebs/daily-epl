@@ -23,7 +23,6 @@ class SoccerPlayer(object):
     def __str__(self):
         return json.dumps(self.raw)
     
-    
     def get_age(self):
         date = datetime.datetime.fromtimestamp(self.dob / 1000)
         return relativedelta(datetime.datetime.now(), date).years

@@ -5,11 +5,17 @@ from hint_config import HintConfig
 from photo_helper import display_player_photo
 import pandas as pd
 
+import json
+
 class GuessHistory(object):
     
     def __init__(self, hint_config: HintConfig):
         self.guesses = []
         self.hint_config = hint_config
+        self.is_winner = False        
+        
+    def mark_as_winner(self):
+        self.is_winner = True
         
         
     def add_guess(self, guess: SoccerPlayer):
@@ -40,13 +46,39 @@ class GuessHistory(object):
         return [name_code, team_hint, country_hint, position_hint, age_hint, jersey_hint, goal_hint, assist_hint, app_hint]
     
     
-    def print_history(self, answer: SoccerPlayer, epl_table: EPLTable, conderation_mapping: dict):
-        table = [self.guess_header()]
+    def get_history_table(self, answer: SoccerPlayer, epl_table: EPLTable, confederation_mapping: dict):
+        table = []
         for g in self.guesses:
             table.append(self.guess_to_data(g))
-            table.append(self.guess_to_hint(answer, g, epl_table, conderation_mapping))
-            
-        
+            table.append(self.guess_to_hint(answer, g, epl_table, confederation_mapping))
+        return table
+    
+    def print_history(self, answer: SoccerPlayer, epl_table: EPLTable, confederation_mapping: dict):
+        table = [self.guess_header()] + self.get_history_table(answer, epl_table, confederation_mapping)
         l1, l2 = len(table), len(table[0])
         pd.set_option('expand_frame_repr', False)
         print(pd.DataFrame(table, index=['']*l1, columns=['']*l2))
+
+            
+    def __str__(self):
+        return json.dumps(self.to_json())
+        
+        
+    def to_json(self):
+        return {
+            "hint_config": self.hint_config.to_json(),
+            "guesses": [p.raw for p in self.guesses],
+            "is_winner": self.is_winner
+        }
+        
+        return [p.raw for p in self.guesses]
+    
+    @classmethod
+    def from_json(cls, json_data):
+        hint_config = HintConfig.from_json(json_data["hint_config"])
+        guesses = [SoccerPlayer(g) for g in json_data["guesses"]]
+        is_winner = json_data["is_winner"]
+        obj = cls(hint_config)
+        obj.guesses = guesses
+        obj.is_winner = is_winner
+        return obj
