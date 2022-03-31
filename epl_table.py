@@ -15,6 +15,9 @@ class EPLTable(object):
         position1 = self.standings.index(team1)
         position2 = self.standings.index(team2)
         return (position1 - position2)
+
+    def get_epl_position(self, team):
+        return self.standings.index(team)
     
     
 

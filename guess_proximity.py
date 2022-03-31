@@ -2,8 +2,10 @@ from soccer_player import SoccerPlayer
 from epl_table import EPLTable
 
 CORRECT = "✓"
-LOWER = "↓"
-HIGHER = "↑"
+LOWER_WRONG = "↓↓"
+LOWER_CLOSE = "↓"
+HIGHER_WRONG = "↑"
+HIGHER_CLOSE = "↑↑"
 WRONG = "X"
 
 
@@ -25,10 +27,16 @@ def get_comparison_code(player_v, guess_v, offset):
     comp = player_v - guess_v
     if player_v == guess_v:
         return CORRECT
-    elif comp > 0 and comp <= offset:
-        return HIGHER
-    elif comp < 0 and comp >= -offset:
-        return LOWER
+    elif comp > 0:
+        if comp <= offset:
+            return HIGHER_CLOSE
+        else:
+            return HIGHER_WRONG
+    elif comp < 0:
+        if comp >= -offset:
+            return LOWER_CLOSE
+        else:
+            return LOWER_WRONG
     else:
         return WRONG
 
@@ -41,12 +49,6 @@ def get_assists_code(player: SoccerPlayer, guess: SoccerPlayer, hint_range: int)
     player_v = player.assists
     guess_v = guess.assists
     return get_comparison_code(player_v, guess_v, hint_range)
-
-
-# def get_mins_code(player: SoccerPlayer, guess: SoccerPlayer, hint_range: int):
-#     player_v = player.mins_played
-#     guess_v = guess.mins_played
-#     return get_comparison_code(player_v, guess_v, hint_range)
 
 def get_age_code(player: SoccerPlayer, guess: SoccerPlayer, hint_range: int):
     player_v = player.get_age()
@@ -66,12 +68,16 @@ def get_jersey_code(player: SoccerPlayer, guess: SoccerPlayer, hint_range: int):
     return get_comparison_code(player_v, guess_v, hint_range)
 
 def get_team_code(player: SoccerPlayer, guess: SoccerPlayer, epl_table: EPLTable, hint_range: int):
-    player_v = player.team
-    guess_v = guess.team
-    if player_v == guess_v:
+    player_t = player.team
+    guess_t = guess.team
+    if player_t == guess_t:
         return CORRECT
     else:
-        return get_comparison_code(0, epl_table.get_epl_table_diff(player_v, guess_v), hint_range)
+        player_p = epl_table.get_epl_position(player_t)
+        guess_p = epl_table.get_epl_position(guess_t) 
+        print("POSITION", player_p, guess_p)
+        ## Reverse it because 1 is higher than 20 in this context
+        return get_comparison_code(guess_p, player_p, hint_range)
     
 def get_country_code(player: SoccerPlayer, guess: SoccerPlayer, confederation_mapping: dict):
     player_v = player.get_country()

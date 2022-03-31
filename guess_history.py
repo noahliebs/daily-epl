@@ -47,11 +47,19 @@ class GuessHistory(object):
     
     
     def get_history_table(self, answer: SoccerPlayer, epl_table: EPLTable, confederation_mapping: dict):
-        table = []
-        for g in self.guesses:
-            table.append(self.guess_to_data(g))
-            table.append(self.guess_to_hint(answer, g, epl_table, confederation_mapping))
-        return table
+        guess_table = self.get_guess_data()
+        hint_table = self.get_hint_data(answer, epl_table, confederation_mapping)
+        
+        result = [None]*(2 * len(guess_table))
+        result[::2] = guess_table
+        result[1::2] = hint_table
+        return result
+    
+    def get_guess_data(self):
+        return [self.guess_to_data(g) for g in self.guesses]
+    
+    def get_hint_data(self, answer: SoccerPlayer, epl_table: EPLTable, confederation_mapping: dict):
+        return [self.guess_to_hint(answer, g, epl_table, confederation_mapping) for g in self.guesses]
     
     def print_history(self, answer: SoccerPlayer, epl_table: EPLTable, confederation_mapping: dict):
         table = [self.guess_header()] + self.get_history_table(answer, epl_table, confederation_mapping)

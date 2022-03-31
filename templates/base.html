@@ -1,0 +1,47 @@
+<!doctype html>
+<html>
+    <head>
+        <title>EPL Guessing Game</title>
+    </head>
+    <table align="right" border="1" width="600px" style="margin: 0 auto;" >
+    <caption style="caption-side:top">LEGEND</caption>
+   		<tr>
+        	<td>↓↓</td>
+        	<td>the value is lower</td>
+    	</tr>
+    	<tr>
+        	<td>↓</td>
+        	<td>the value is lower, but within 3</td>
+    	</tr>
+    	<tr>
+        	<td>↑↑</td>
+        	<td>the value is higher</td>
+    	</tr>
+    	<tr>
+        	<td>↑</td>
+        	<td>the value is higher, but within 3</td>
+    	</tr>
+    	<tr>
+        	<td>✓</td>
+        	<td>the value is correct</td>
+    	</tr>
+    	<tr>
+        	<td>X</td>
+        	<td>the value is wrong</td>
+    	</tr>
+    	<tr>
+        	<td>Team</td>
+        	<td>Live EPL Standings</td>
+    	</tr>
+	    <tr>
+        	<td>Country</td>
+        	<td>FIFA Confederation partial correctness</td>
+    	</tr>
+	</table>
+    <form method="post">
+    	<label for="name">Enter player name:</label>
+        <input type="name" id="name" name="player_name" required />
+        <button type="submit">Submit</button>
+    </form>
+    {% block content %}{% endblock %}
+</html>
