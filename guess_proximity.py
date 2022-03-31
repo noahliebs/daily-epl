@@ -75,7 +75,6 @@ def get_team_code(player: SoccerPlayer, guess: SoccerPlayer, epl_table: EPLTable
     else:
         player_p = epl_table.get_epl_position(player_t)
         guess_p = epl_table.get_epl_position(guess_t) 
-        print("POSITION", player_p, guess_p)
         ## Reverse it because 1 is higher than 20 in this context
         return get_comparison_code(guess_p, player_p, hint_range)
     
