@@ -15,7 +15,7 @@ from random import sample
 
 
 
-from setup import *
+from game_setup import *
 (players, player_map, filtered_players) = init_players()
 type_ahead_helper = init_type_ahead(players)
 hint_config = init_hint_config()
