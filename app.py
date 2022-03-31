@@ -3,8 +3,6 @@ import json
 import redis
 import base64
 
-
-from prettytable import PrettyTable
 from flask import Flask, request, session, redirect, url_for, render_template
 from flask_session import Session
 from game_functions import *
