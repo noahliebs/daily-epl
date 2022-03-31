@@ -2,9 +2,10 @@ import datetime
 import json
 import redis
 import base64
+import os
 
 
-from flask import Flask, request, session, redirect, url_for, render_template
+from flask import Flask, request, session, redirect, url_for, render_template, send_from_directory
 from flask_session import Session
 from game_functions import *
 from photo_helper import *
@@ -61,6 +62,11 @@ app.config['SESSION_TYPE'] = 'filesystem'
 
 # Create and initialize the Flask-Session object AFTER `app` has been configured
 server_session = Session(app)
+
+@app.route('/favicon.ico')
+def favicon():
+    return send_from_directory(os.path.join(app.root_path, 'static'),
+                               'favicon.ico', mimetype='image/vnd.microsoft.icon')
 
 
 @app.route('/', methods=['GET', 'POST'])
