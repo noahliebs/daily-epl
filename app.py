@@ -33,7 +33,7 @@ answers = {}
 ## TODO: Make this random. Right now it's deterministic because heroku isn't stateful
 def get_todays_answer():
     today = datetime.datetime.today()
-    date_hash = (int(today.strftime('%Y%m%d')) * 31) % len(filtered_players)
+    date_hash = (int(today.strftime('%Y%m%d')) * 33) % len(filtered_players)
     if today in answers:
         return answers[today]
     else:
