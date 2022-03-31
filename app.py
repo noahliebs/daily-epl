@@ -3,6 +3,7 @@ import json
 import redis
 import base64
 
+
 from flask import Flask, request, session, redirect, url_for, render_template
 from flask_session import Session
 from game_functions import *
@@ -29,12 +30,14 @@ GUESS_HISTORY = "guess_history"
 
 ## Track list of answers
 answers = {}
+## TODO: Make this random. Right now it's deterministic because heroku isn't stateful
 def get_todays_answer():
-    today = datetime.datetime.today().strftime('%Y-%m-%d')
+    today = datetime.datetime.today()
+    date_hash = (int(today.strftime('%Y%m%d')) * 31) % len(filtered_players)
     if today in answers:
         return answers[today]
     else:
-        answer = pick_random_player(filtered_players)
+        answer = filtered_players[date_hash]
         answers[today] = answer
         return answer
 

@@ -29,9 +29,9 @@ def get_comparison_code(player_v, guess_v, offset):
         return CORRECT
     elif comp > 0:
         if comp <= offset:
-            return HIGHER_CLOSE
-        else:
             return HIGHER_WRONG
+        else:
+            return HIGHER_CLOSE
     elif comp < 0:
         if comp >= -offset:
             return LOWER_CLOSE
