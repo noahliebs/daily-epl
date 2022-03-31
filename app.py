@@ -62,7 +62,7 @@ app.config['SESSION_TYPE'] = 'filesystem'
 server_session = Session(app)
 
 
-@app.route('/game', methods=['GET', 'POST'])
+@app.route('/', methods=['GET', 'POST'])
 def input_guess():
     today = datetime.datetime.today().strftime('%Y-%m-%d')
     answer = get_todays_answer()
@@ -124,5 +124,5 @@ def get_img_data(player: SoccerPlayer):
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0')
-    #app.run()
+    ##app.run(host='0.0.0.0')
+    app.run()
