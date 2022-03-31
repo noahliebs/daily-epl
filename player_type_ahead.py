@@ -15,6 +15,8 @@ class PlayerTypeAhead(object):
                 for ln in p.get_last_name().split(" "):
                     root.add(ln, p.get_display_name())
 
+                root.add(p.get_first_name() + " " + p.get_last_name(), p.get_display_name())
+
 
             self.root = root
 
