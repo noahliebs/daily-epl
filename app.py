@@ -1,3 +1,4 @@
+import pprint
 import datetime
 import json
 import redis
@@ -112,12 +113,11 @@ def input_guess():
 
 
 def return_response(guess_history: GuessHistory, message: str):
-    todays_winner = get_todays_answer()
-    answer_name = todays_winner.get_display_name()
-    guess_data = guess_history.get_guess_data()
-    hint_data = guess_history.get_hint_data(todays_winner, epl_table, confederation_mapping)
+    guess_table_data = generate_guess_table_data(guess_history)
+
     images = [get_img_data(p) for p in guess_history.guesses]
-    return render_template("game.html", headers = headers, guess_data = guess_data, hint_data = hint_data, message = message, images = images, size = list(range(len(images))))
+    return render_template("game.html", headers = headers, guess_table_data = guess_table_data, message = message, images = images, size = list(range(len(images))))
+
 
 def return_finished(guess_history):
     answer_name = get_todays_answer().get_display_name()
@@ -127,6 +127,31 @@ def return_finished(guess_history):
         message = "Correct answer was: {}. You Lose!".format(answer_name)
         
     return return_response(guess_history, message)
+
+
+
+def generate_guess_table_data(guess_history: GuessHistory):
+    todays_winner = get_todays_answer()
+    guess_data = guess_history.get_guess_data()
+    hint_data = guess_history.get_hint_data(todays_winner, epl_table, confederation_mapping)
+
+    guess_table_data = []
+    for i in range(len(guess_data)):
+        row = []
+        for j in range(len(headers)):
+            value = [guess_data[i][j]]
+            hint = hint_data[i][j]
+            if hint == "✓":
+                value.extend(["", "correct"])
+            elif hint in (["↑", "↓"] + list(confederation_mapping.values())):
+                value.extend([hint, "close"])
+            elif hint in ["↑↑", "↓↓"]:
+                value.extend([hint, "wrong"])
+            else:
+                value.extend(["", "wrong"])
+            row.append(value)
+        guess_table_data.append(row)
+    return guess_table_data
 
 
 def get_img_data(player: SoccerPlayer):

@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 <br>
-<table border="1" width="600px" style="margin: 0 auto;" align="left">
+<table id = "guess_table" border="1" width="800px" style="margin: 0 auto;" align="left">
   <!--  <caption style="caption-side:bottom"><b>{{ message }}</b></caption> -->
    <tr>
         <th></th>
@@ -11,16 +11,19 @@
     </tr>
     {% for i in size %}
     <tr>
-		<td rowspan="2"><img id="picture" src="data:;base64,{{ images[i] }}"></td>
-        {% for v in guess_data[i] %}
-        <td>{{v}}</td>
+		<td><img id="picture" src="data:;base64,{{ images[i] }}"></td>
+        {% for v in guess_table_data[i] %}
+          {% if v[2] == "correct" %}
+            <td style="background-color:green; color:white;">{{v[0]}} {{v[1]}}</td>
+          {% elif v[2] == "close" %}
+            <td style="background-color:yellow;color:black;">{{v[0]}} {{v[1]}}</td>
+          {% else %}
+            <td style="background-color:white;color:black;">{{v[0]}} {{v[1]}}</td>
+          {% endif %}
+<!--           <td class={{v[2]}}>{{v[0]}} {{v[1]}}</td> -->
         {% endfor %}
       </td>
   	</tr>
-  	<tr>
-  		{% for v in hint_data[i] %}
-        <td>{{v}}</td>
-        {% endfor %}
     {% endfor %}
 </table>
 {% endblock %}

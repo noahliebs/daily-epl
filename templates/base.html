@@ -2,12 +2,35 @@
 <html>
     <head>
         <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+        <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/css/style.css') }}">
         <title>EPL Guessing Game</title>
+<!-- 
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.js"></script>
+        <script type="text/javascript">
+
+        $(document).ready(function(){
+            $('#guess_table td.hint').each(function(){
+                if ($(this).text() == 'correct') {
+                    $(this).css('background-color','green');
+                    $(this).css('color','white');
+                }
+                else if ($(this).text() == 'close') {
+                    $(this).css('background-color','yellow');
+                    $(this).css('color','black');
+                }
+                else {
+                    $(this).css('background-color','white');
+                    $(this).css('color','black');
+
+                }
+            });
+        });
+
+        </script> -->
     </head>
     <div>
         <h1>Welcome to EPL Guessing Game. Try to guess the player of the day!</h1>
     </div>
-    <div>
         <table border="1" width="600px" style="margin: 0 auto;" align="left" >
         <caption style="caption-side:top">LEGEND</caption>
        		<tr>
@@ -36,11 +59,11 @@
         	</tr>
         	<tr>
             	<td>Team</td>
-            	<td>Live EPL Standings</td>
+            	<td>↑ means a higher position in the live EPL table</td>
         	</tr>
     	    <tr>
             	<td>Country</td>
-            	<td>FIFA Confederation partial correctness</td>
+            	<td>FIFA Confederation for continental partial correctness</td>
         	</tr>
     	</table>
     </div>
@@ -49,7 +72,10 @@
         {% if "!" not in message  %}
             <form method="post" align="left">
                 <label for="name" style="font-size=48px;"><h2>{{ message }}</h2></label>
-                <input type="name" id="name" name="player_name" required />
+                <input type="search" id="name" name="player_name" autofocus="true"
+                   onkeyup="if(this.value.length >= 3)this.setAttribute('list','dir');" 
+                   onkeydown="if(this.value.length < 3|| event.keyCode == 8 )this.removeAttribute('list');"
+                   placeholder="Search Player Name"/>
                 <button type="submit">Enter Name</button>
             </form>
         {% else %}
