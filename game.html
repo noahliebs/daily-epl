@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block content %}
+<br>
+<table border="1" width="600px" style="margin: 0 auto;" align="left">
+  <!--  <caption style="caption-side:bottom"><b>{{ message }}</b></caption> -->
+   <tr>
+        <th></th>
+        {% for h in headers %}
+        <th><b>{{ h }}</b></th>
+        {% endfor %}
+    </tr>
+    {% for i in size %}
+    <tr>
+		<td rowspan="2"><img id="picture" src="data:;base64,{{ images[i] }}"></td>
+        {% for v in guess_data[i] %}
+        <td>{{v}}</td>
+        {% endfor %}
+      </td>
+  	</tr>
+  	<tr>
+  		{% for v in hint_data[i] %}
+        <td>{{v}}</td>
+        {% endfor %}
+    {% endfor %}
+</table>
+{% endblock %}

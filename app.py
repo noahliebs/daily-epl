@@ -103,7 +103,7 @@ def input_guess():
         return return_finished(guess_history)
         
  
-    return return_response(guess_history, "")
+    return return_response(guess_history, "Partial names accepted")
     
 
 
