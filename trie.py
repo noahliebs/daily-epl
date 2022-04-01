@@ -18,7 +18,7 @@ class TrieNode(object):
         """
         Adding a word in the trie structure
         """
-        search_word = self.normalize_search_string(raw_search_word)
+        search_word = TrieNode.normalize_search_string(raw_search_word)
         
         node = self
         for char in search_word:
@@ -47,7 +47,7 @@ class TrieNode(object):
           1. If the prefix exsists in any of the words we added so far
           2. If yes then return the set of all "full" words
         """
-        prefix = self.normalize_search_string(raw_prefix)
+        prefix = TrieNode.normalize_search_string(raw_prefix)
         node = self
         # If the root node has no children, then return False.
         # Because it means we are trying to search in an empty trie
@@ -79,10 +79,10 @@ class TrieNode(object):
         all_results = dfs(prefix, node)
         ## TO DO: If exact match, ignore partial matches --> Remove once dropdown is added
         for v in all_results:
-            if self.normalize_search_string(raw_prefix) == self.normalize_search_string(v):
+            if TrieNode.normalize_search_string(raw_prefix) == TrieNode.normalize_search_string(v):
                 return set([v])
         return all_results
 
-    
-    def normalize_search_string(self, raw_string):
+    @staticmethod
+    def normalize_search_string(raw_string):
         return unidecode.unidecode(raw_string).lower() 

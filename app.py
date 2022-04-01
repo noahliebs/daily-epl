@@ -14,7 +14,6 @@ from random import sample
 
 
 
-
 from game_setup import *
 (players, player_map, filtered_players) = init_players()
 type_ahead_helper = init_type_ahead(players)
@@ -79,8 +78,8 @@ def input_guess():
     answer = get_todays_answer()
     if GUESS_HISTORY not in session:
         session[GUESS_HISTORY] = {}
-        if today not in session[GUESS_HISTORY]:
-            session[GUESS_HISTORY][today] = GuessHistory(hint_config).to_json()
+    if today not in session[GUESS_HISTORY]:
+        session[GUESS_HISTORY][today] = GuessHistory(hint_config).to_json()
 
     guess_history = GuessHistory.from_json(session[GUESS_HISTORY][today])
     guess_history.hint_config = hint_config
