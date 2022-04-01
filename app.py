@@ -12,6 +12,8 @@ from photo_helper import *
 from guess_history import GuessHistory
 from random import sample
 
+from data_collection import *
+
 
 
 from game_setup import *
@@ -158,6 +160,66 @@ def generate_guess_table_data(guess_history: GuessHistory):
 def get_img_data(player: SoccerPlayer):
     return base64.b64encode(get_player_photo(player).content).decode("utf-8")
     
+
+def update_epl_table():
+    global players
+    global player_map
+    global filtered_players
+
+    print("Updating Player Stats")
+
+    updated_players = [get_player_stats(p.raw) for p in players]
+    with open("data/augmented_players.json") as f:
+        f.write(json.dumps(updated_players))
+
+
+    (players, player_map, filtered_players) = init_players()
+    return "done"
+
+
+def update_player_stats():
+    global players
+    global player_map
+    global filtered_players
+
+    print("Updating Player Stats")
+
+    updated_players = [get_player_stats(p.raw) for p in players]
+    with open("data/augmented_players.json") as f:
+        f.write(json.dumps(updated_players))
+
+
+    (players, player_map, filtered_players) = init_players()
+    return "DONE"
+
+
+
+
+import atexit
+from apscheduler.schedulers.background import BackgroundScheduler
+scheduler = BackgroundScheduler()
+scheduler.add_job(func=update_epl_table, trigger="interval", hours=3)
+scheduler.add_job(func=update_player_stats, trigger="interval", hours=1)
+scheduler.start()
+
+## Run them right away
+for job in scheduler.get_jobs():
+    job.modify(next_run_time=datetime.datetime.now())
+
+# Shut down the scheduler when exiting the app
+atexit.register(lambda: scheduler.shutdown())
+
+
+## Admin API
+@app.route('/update_players_zz', methods=['GET', 'POST'])
+def update_players():
+    update_player_stats()
+
+## Admin API
+@app.route('/update_table_zz', methods=['GET', 'POST'])
+def update_table():
+    update_epl_table()
+
 
 
 if __name__ == '__main__':
