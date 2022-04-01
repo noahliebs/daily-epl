@@ -77,9 +77,9 @@ class TrieNode(object):
             return node.value
 
         def dfs(nested_prefix, node):
-            res = set()
+            res = node.value
             if not node.children:
-                return node.value
+                return res
             for child in node.children:
                 res = res.union(dfs(nested_prefix + child.char, child))
             return res
