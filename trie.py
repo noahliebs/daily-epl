@@ -68,14 +68,6 @@ class TrieNode(object):
                 return set()
 
         ## Now that we have the node, let's get all leaf nodes
-        ## TO DO: If exact match, ignore partial matches --> Remove once dropdown is added
-        if node.word_finished:
-            for v in node.value:
-                if self.normalize_search_string(v) in [self.normalize_search_string(full_v) for full_v in node.value]:
-                    return set([v])
-            print(node.value)
-            return node.value
-
         def dfs(nested_prefix, node):
             res = node.value
             if not node.children:
@@ -84,7 +76,13 @@ class TrieNode(object):
                 res = res.union(dfs(nested_prefix + child.char, child))
             return res
 
-        return dfs(prefix, node)
+        all_results = dfs(prefix, node)
+        ## TO DO: If exact match, ignore partial matches --> Remove once dropdown is added
+        for v in all_results:
+            if self.normalize_search_string(raw_prefix) == self.normalize_search_string(v):
+                return set([v])
+        return all_results
+
     
     def normalize_search_string(self, raw_string):
         return unidecode.unidecode(raw_string).lower() 
