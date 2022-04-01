@@ -3,7 +3,7 @@ import json
 import redis
 import base64
 import os
-
+import pytz
 
 from flask import Flask, request, session, redirect, url_for, render_template, send_from_directory
 from flask_session import Session
@@ -32,8 +32,12 @@ GUESS_HISTORY = "guess_history"
 ## Track list of answers
 answers = {}
 ## TODO: Make this random. Right now it's deterministic because heroku isn't stateful
+def get_today():
+    now = datetime.datetime.now(tz=pytz.utc)
+    return now.astimezone(pytz.timezone('US/Pacific'))
+
 def get_todays_answer():
-    today = datetime.datetime.today()
+    today = get_today()
     date_hash = (int(today.strftime('%Y%m%d')) * 33) % len(filtered_players)
     if today in answers:
         return answers[today]
@@ -71,7 +75,7 @@ def favicon():
 
 @app.route('/', methods=['GET', 'POST'])
 def input_guess():
-    today = datetime.datetime.today().strftime('%Y-%m-%d')
+    today = get_today().strftime('%Y-%m-%d')
     answer = get_todays_answer()
     if GUESS_HISTORY not in session:
         session[GUESS_HISTORY] = {}
