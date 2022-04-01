@@ -1,13 +1,14 @@
 <!doctype html>
 <html>
     <head>
+        <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
         <title>EPL Guessing Game</title>
     </head>
     <div>
         <h1>Welcome to EPL Guessing Game. Try to guess the player of the day!</h1>
     </div>
     <div>
-        <table border="1" width="600px" style="margin: 0 auto;" >
+        <table border="1" width="600px" style="margin: 0 auto;" align="left" >
         <caption style="caption-side:top">LEGEND</caption>
        		<tr>
             	<td>↓↓</td>
@@ -43,12 +44,12 @@
         	</tr>
     	</table>
     </div>
-    <br>
+    <br><br><br><br><br><br><br><br><br><br><br><br><br>
     <div>
-        <form method="post">
-            <label for="name">Enter player name. Partial names accepted</label>
+        <form method="post" align="left">
+            <label for="name" style="font-size=48px;"><h2>{{ message }}</h2></label>
             <input type="name" id="name" name="player_name" required />
-            <button type="submit">Submit</button>
+            <button type="submit">Enter Name</button>
         </form>
     </div>
    
