@@ -11,7 +11,7 @@ class TrieNode(object):
         # Is it the last character of the word.
         self.word_finished = False
         # Store the full names as a list
-        self.value = []
+        self.value = set([])
     
 
     def add(self, raw_search_word: str, value: str):
@@ -38,7 +38,7 @@ class TrieNode(object):
                 node = new_node
         # Everything finished. Mark it as the end of a word and store the full value
         node.word_finished = True
-        node.value.append(value)
+        node.value.add(value)
 
 
     def find_prefix(self, raw_prefix: str):
@@ -71,14 +71,15 @@ class TrieNode(object):
         ## TO DO: If exact match, ignore partial matches --> Remove once dropdown is added
         if node.word_finished:
             for v in node.value:
-                if self.normalize_search_string(v) == self.normalize_search_string(raw_prefix):
+                if self.normalize_search_string(v) in [self.normalize_search_string(full_v) for full_v in node.value]:
                     return set([v])
-            return set(node.value)
+            print(node.value)
+            return node.value
 
         def dfs(nested_prefix, node):
-            if node.word_finished:
-                return node.value
             res = set()
+            if not node.children:
+                return node.value
             for child in node.children:
                 res = res.union(dfs(nested_prefix + child.char, child))
             return res
