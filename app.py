@@ -1,4 +1,3 @@
-import pprint
 import datetime
 import json
 import redis
