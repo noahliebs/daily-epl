@@ -141,7 +141,10 @@ def generate_guess_table_data(guess_history: GuessHistory):
             hint = hint_data[i][j]
             if hint == "✓":
                 value.extend(["", "correct"])
-            elif hint in (["↑", "↓"] + list(confederation_mapping.values())):
+            elif hint in ["↑", "↓"]:
+                value.extend([hint, "close"])
+            elif hint in list(confederation_mapping.values()):
+                ## Dont display confederation
                 value.extend(["", "close"])
             elif hint in ["↑↑", "↓↓"]:
                 value.extend([hint, "wrong"])
