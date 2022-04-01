@@ -46,11 +46,16 @@
     </div>
     <br><br><br><br><br><br><br><br><br><br><br><br><br>
     <div>
-        <form method="post" align="left">
-            <label for="name" style="font-size=48px;"><h2>{{ message }}</h2></label>
-            <input type="name" id="name" name="player_name" required />
-            <button type="submit">Enter Name</button>
-        </form>
+        {% if "!" not in message  %}
+            <form method="post" align="left">
+                <label for="name" style="font-size=48px;"><h2>{{ message }}</h2></label>
+                <input type="name" id="name" name="player_name" required />
+                <button type="submit">Enter Name</button>
+            </form>
+        {% else %}
+        <h2>{{ message }}</h2>
+        {% endif %}
+
     </div>
    
     <div>
