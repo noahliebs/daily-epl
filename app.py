@@ -116,7 +116,7 @@ def return_response(guess_history: GuessHistory, message: str):
     guess_table_data = generate_guess_table_data(guess_history)
 
     images = [get_img_data(p) for p in guess_history.guesses]
-    return render_template("game.html", headers = headers, guess_table_data = guess_table_data, message = message, images = images, size = list(range(len(images))))
+    return render_template("game.html", headers = headers, guess_table_data = guess_table_data, message = message, images = images, guess_count = len(images), size = list(range(len(images))))
 
 
 def return_finished(guess_history):

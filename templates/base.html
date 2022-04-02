@@ -41,13 +41,17 @@
             	<td>Country</td>
             	<td>partial correctness for the same FIFA Confederation</td>
         	</tr>
+            <tr>
+                <td>Guesses</td>
+                <td>Maximum of 8 guesses!</td>
+            </tr>
     	</table>
     </div>
-    <br><br><br><br><br><br><br><br><br><br><br><br><br>
+    <br><br><br><br><br><br><br><br><br><br><br><br><br><br>
     <div>
         {% if "!" not in message  %}
             <form method="post" align="left">
-                <label for="name" style="font-size=48px;"><p>{{ message }}<p></label>
+                <label for="name" style="font-size=48px;"><h4>{{ message }}<h4></label>
                 <!-- <input type="search" id="name" name="player_name" autofocus="true" placeholder="Search Player Name"> -->
                 <input style="font-size:12pt;" list="players" name="player_name" id="player_name" placeholder="Player Name" autofocus="true" minlength="1">
                 <button type="submit">Submit</button>
@@ -695,6 +699,7 @@
                     <option value="Liam Gibbs">
                 </datalist>
             </form>
+            <h4>{{ 8 - guess_count}} guesses left!</h4>
         {% else %}
         <h2>{{ message }}</h2>
         {% endif %}
