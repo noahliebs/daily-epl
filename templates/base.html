@@ -49,7 +49,7 @@
     </div>
     <br><br><br><br><br><br><br><br><br><br><br><br><br><br>
     <div>
-        {% if "!" not in message  %}
+        {% if "!" not in message and 8 > guess_count %}
             <form method="post" align="left">
                 <label for="name" style="font-size=48px;"><h4>{{ message }}<h4></label>
                 <!-- <input type="search" id="name" name="player_name" autofocus="true" placeholder="Search Player Name"> -->
