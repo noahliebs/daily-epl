@@ -101,7 +101,7 @@ def input_guess():
                 process_guess(answer, guess, guess_history, epl_table, confederation_mapping)
                 session[GUESS_HISTORY][today] = guess_history.to_json()
         else:
-            message =  """Valid relevant options: {}""".format(", ".join(valid_names))
+            message =  """Relevant options: {}""".format(", ".join(valid_names))
             return return_response(guess_history, message)
 
     if is_game_over(guess_history):
@@ -122,9 +122,9 @@ def return_response(guess_history: GuessHistory, message: str):
 def return_finished(guess_history):
     answer_name = get_todays_answer().get_display_name()
     if guess_history.is_winner:
-        message = "{} is correct! YOU WIN!".format(answer_name)
+        message = "{} is correct!".format(answer_name)
     else:
-        message = "Correct answer was: {}. You Lose!".format(answer_name)
+        message = "Correct answer was: {}".format(answer_name)
         
     return return_response(guess_history, message)
 
