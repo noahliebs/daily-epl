@@ -1,6 +1,6 @@
 import requests
 
-def get_player_stats(cleansed_player):
+def get_live_player_stats(cleansed_player):
     url = 'https://footballapi.pulselive.com/football/stats/player/%s?comps=1&compSeasons=418' % str(int(cleansed_player["id"]))
     payload = requests.get(url, headers = { "origin": "https://www.premierleague.com"}).json()
 
@@ -26,7 +26,7 @@ def get_player_stats(cleansed_player):
 
 
 
-def get_epl_table():
+def get_live_epl_table():
     url = 'https://footballapi.pulselive.com/football/standings?compSeasons=418&altIds=true&detail=2&FOOTBALL_COMPETITION=1'
     payload = requests.get(url, headers = { "origin": "https://www.premierleague.com"}).json()
     table = payload["tables"][0]

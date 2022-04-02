@@ -12,7 +12,7 @@ from photo_helper import *
 from guess_history import GuessHistory
 from random import sample
 
-from data_collection import *
+from data_collection import get_live_epl_table, get_live_player_stats
 
 
 
@@ -162,34 +162,36 @@ def get_img_data(player: SoccerPlayer):
     
 
 def update_epl_table():
-    global players
-    global player_map
-    global filtered_players
+    global epl_table
 
-    print("Updating Player Stats")
+    print("Updating EPL Table Stats")
 
-    updated_players = [get_player_stats(p.raw) for p in players]
-    with open("data/augmented_players.json") as f:
-        f.write(json.dumps(updated_players))
+    table = get_live_epl_table()
+    with open("data/epl_table.json", "w") as f:
+        f.write(json.dumps(table))
 
 
-    (players, player_map, filtered_players) = init_players()
-    return "done"
+    epl_table = init_epl_table()
+    print("Done updating epl table")
+    return "DONE"
 
 
 def update_player_stats():
     global players
     global player_map
-    global filtered_players
 
     print("Updating Player Stats")
 
-    updated_players = [get_player_stats(p.raw) for p in players]
-    with open("data/augmented_players.json") as f:
+    updated_players = []
+    for p in players:
+        p.raw.update(get_live_player_stats(p.raw))
+        updated_players.append(p.raw)
+    with open("data/augmented_players.json", "w") as f:
         f.write(json.dumps(updated_players))
 
 
-    (players, player_map, filtered_players) = init_players()
+    (players, player_map, _) = init_players()
+    print("Done updating player stats")
     return "DONE"
 
 
