@@ -27,7 +27,7 @@ def get_live_player_stats(cleansed_player):
 
 
 def get_live_epl_table():
-    url = 'https://footballapi.pulselive.com/football/standings?compSeasons=418&altIds=true&detail=2&FOOTBALL_COMPETITION=1'
+    url = 'https://footballapi.pulselive.com/football/standings?compSeasons=418&altIds=true&detail=2&FOOTBALL_COMPETITION=1&live=true'
     payload = requests.get(url, headers = { "origin": "https://www.premierleague.com"}).json()
     table = payload["tables"][0]
     return table["entries"]
