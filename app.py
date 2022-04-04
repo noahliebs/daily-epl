@@ -45,7 +45,7 @@ def get_today():
 
 def get_todays_answer():
     today = get_today()
-    date_hash = (int(today.strftime('%Y%m%d')) * 33) % len(available_players)
+    date_hash = (int(today.strftime('%Y%m%d'))) % len(available_players)
     return available_players[date_hash]
 
 
