@@ -11,20 +11,22 @@ from soccer_player import SoccerPlayer
 def init_players():
     with open("data/augmented_players.json", "r") as f:
         players = [SoccerPlayer(p) for p in json.loads(f.read())]
-    
-    player_map = {}
-    for p in players:
-        player_map[p.get_display_name()] = p
         
         
-    min_mins_requirement = 900
-    min_games = 10
+    # min_mins_requirement = 900
+    # min_games = 10
 
-    ## When choosing a random player, restrict the subset to players people would actually know
-    filtered_players = [p for p in players if p.appearances >= min_games and p.mins_played > min_mins_requirement and p.position != "G"]
+    # ## When choosing a random player, restrict the subset to players people would actually know
+    # filtered_players = [p for p in players if p.appearances >= min_games and p.mins_played > min_mins_requirement and p.position != "G"]
     
-    return (players, player_map, filtered_players)
-   
+    # return (players, player_map, filtered_players)
+    return players
+
+
+def get_players_for_selection():
+    with open("data/filtered_players.csv", "r") as f:
+        return f.read().split("\n")
+
 def init_type_ahead(players):
      ## Initialize Type Ahead Search
     return PlayerTypeAhead(players)

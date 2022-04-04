@@ -17,7 +17,16 @@ from data_collection import get_live_epl_table, get_live_player_stats
 
 
 from game_setup import *
-(players, player_map, filtered_players) = init_players()
+players = init_players()
+
+player_map = {}
+for p in players:
+    player_map[p.get_display_name()] = p
+
+## Limit who's availability to be an answer
+available_players = get_players_for_selection()
+
+
 type_ahead_helper = init_type_ahead(players)
 hint_config = init_hint_config()
 epl_table = init_epl_table()
@@ -29,9 +38,6 @@ headers = ["Name", "Team", "Country", "Position", "Age", "Jersey", "Goals", "Ass
 GUESS_HISTORY = "guess_history" 
 
 
-
-## Track list of answers
-answers = {}
 ## TODO: Make this random. Right now it's deterministic because heroku isn't stateful
 def get_today():
     now = datetime.datetime.now(tz=pytz.utc)
@@ -39,13 +45,13 @@ def get_today():
 
 def get_todays_answer():
     today = get_today()
-    date_hash = (int(today.strftime('%Y%m%d')) * 33) % len(filtered_players)
-    if today in answers:
-        return answers[today]
-    else:
-        answer = filtered_players[date_hash]
-        answers[today] = answer
-        return answer
+    date_hash = (int(today.strftime('%Y%m%d')) * 33) % len(available_players)
+    return available_players[date_hash]
+
+
+def get_todays_answer_as_player():
+    name = get_todays_answer()
+    return get_player_as_updated(name)
 
 
 
@@ -77,7 +83,7 @@ def favicon():
 @app.route('/', methods=['GET', 'POST'])
 def input_guess():
     today = get_today().strftime('%Y-%m-%d')
-    answer = get_todays_answer()
+    answer = get_todays_answer_as_player()
     if GUESS_HISTORY not in session:
         session[GUESS_HISTORY] = {}
     if today not in session[GUESS_HISTORY]:
@@ -108,7 +114,7 @@ def input_guess():
         return return_finished(guess_history)
         
  
-    return return_response(guess_history, "Partial names accepted")
+    return return_response(guess_history, "")
     
 
 
@@ -120,7 +126,7 @@ def return_response(guess_history: GuessHistory, message: str):
 
 
 def return_finished(guess_history):
-    answer_name = get_todays_answer().get_display_name()
+    answer_name = get_todays_answer()
     if guess_history.is_winner:
         message = "{} is correct!".format(answer_name)
     else:
@@ -131,7 +137,7 @@ def return_finished(guess_history):
 
 
 def generate_guess_table_data(guess_history: GuessHistory):
-    todays_winner = get_todays_answer()
+    todays_winner = get_todays_answer_as_player()
     guess_data = guess_history.get_guess_data()
     hint_data = guess_history.get_hint_data(todays_winner, epl_table, confederation_mapping)
 
@@ -176,10 +182,14 @@ def update_epl_table():
     return "DONE"
 
 
+def get_player_as_updated(player_display_name):
+    raw = player_map[player_display_name].raw
+    raw.update(get_live_player_stats(raw))
+    return SoccerPlayer(raw)
+
+
 def update_player_stats():
     global players
-    global player_map
-
     print("Updating Player Stats")
 
     updated_players = []
@@ -190,7 +200,7 @@ def update_player_stats():
         f.write(json.dumps(updated_players))
 
 
-    (players, player_map, _) = init_players()
+    players = init_players()
     print("Done updating player stats")
     return "DONE"
 
@@ -200,8 +210,7 @@ def update_player_stats():
 import atexit
 from apscheduler.schedulers.background import BackgroundScheduler
 scheduler = BackgroundScheduler()
-scheduler.add_job(func=update_epl_table, trigger="interval", hours=3)
-scheduler.add_job(func=update_player_stats, trigger="interval", hours=1)
+scheduler.add_job(func=update_epl_table, trigger="interval", minutes=5)
 scheduler.start()
 
 ## Run them right away
