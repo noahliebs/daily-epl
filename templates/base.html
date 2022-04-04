@@ -1,61 +1,65 @@
 <!doctype html>
 <html>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="{{url_for('static', filename='jquery.js')}}"></script>
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='mainpage.css') }}">
     <head>
         <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
         <title>EPL Guessing Game</title>
     </head>
-    <div>
-        <h1>Welcome to EPL Guessing Game. Try to guess the player of the day!</h1>
+<!--     <div> 
+        <img src="https://assets.turbologo.com/blog/en/2020/01/19084653/Premier-League-symbol-958x575.png"> 
+    </div>  -->
+    <div style="display: flex;justify-content: center;" >
+        <button onclick="toggleInstructions('instructions')">How To Play</button>
+        <button class="btn btn-success" onclick=" window.open('https://www.rotowire.com/soccer/depth-charts.php','_blank')">Rotowire Depth Charts ↗</button>
+        <button class="btn btn-success" onclick=" window.open('https://www.premierleague.com/tables','_blank')">Live EPL Table ↗</button>
     </div>
-        <table border="1" width="600px" style="margin: 0 auto;" align="left" >
-        <caption style="caption-side:top">LEGEND</caption>
+    <div id = "instructions" style="display:none;">
+        <h2 style="text-align: center;">Try to guess the EPL player of the day!</h2>
+        <table border="1" width="600px" style="margin: 0 auto; margin-left:auto;margin-right:auto;"  >
        		<tr>
-            	<td>↓↓</td>
-            	<td>the value is lower</td>
-        	</tr>
+                <td>Guesses</td>
+                <td>Maximum of 8 guesses</td>
+            </tr>
+            <tr>
+                <td style="background-color:green; color:white;">✓</td>
+                <td>the value is correct</td>
+            </tr>
         	<tr>
-            	<td>↓</td>
-            	<td>the value is lower, but within 3</td>
-        	</tr>
-        	<tr>
-            	<td>↑↑</td>
-            	<td>the value is higher</td>
-        	</tr>
-        	<tr>
-            	<td>↑</td>
-            	<td>the value is higher, but within 3</td>
-        	</tr>
-        	<tr>
-            	<td>✓</td>
-            	<td>the value is correct</td>
-        	</tr>
-        	<tr>
-            	<td>X</td>
-            	<td>the value is wrong</td>
-        	</tr>
-        	<tr>
-            	<td>Team</td>
-            	<td>↑ means a higher position in the live EPL table, ↓ is lower</td>
-        	</tr>
-    	    <tr>
-            	<td>Country</td>
-            	<td>partial correctness for the same FIFA Confederation</td>
+            	<td style="background-color:yellow;color:black;">↓</td>
+            	<td>the true value is lower, but within 3</td>
         	</tr>
             <tr>
-                <td>Guesses</td>
-                <td>Maximum of 8 guesses!</td>
+                <td style="background-color:yellow;color:black;">↑</td>
+                <td>the true value is higher, but within 3</td>
             </tr>
+            <tr>
+                <td style="background-color:yellow;color:black;">Team</td>
+                <td >↑ means a higher position in the live EPL table, ↓ is lower</td>
+            </tr>
+            <tr>
+                <td style="background-color:yellow;color:black;">Country</td>
+                <td>partial correctness for the same FIFA Confederation</td>
+            </tr>
+            <tr>
+                <td>↓↓</td>
+                <td>the true value is lower</td>
+            </tr>
+        	<tr>
+            	<td>↑↑</td>
+            	<td>the true value is higher</td>
+        	</tr>
     	</table>
     </div>
-    <br><br><br><br><br><br><br><br><br><br><br><br><br><br>
     <div>
         {% if "!" not in message and 8 > guess_count %}
-            <form method="post" align="left">
-                <label for="name" style="font-size=48px;"><h4>{{ message }}<h4></label>
+            <form method="post" style="text-align: center;">
+                <label for="name"><h4>{{ message }}<h4></label>
                 <!-- <input type="search" id="name" name="player_name" autofocus="true" placeholder="Search Player Name"> -->
-                <input style="font-size:12pt;" list="players" name="player_name" id="player_name" placeholder="Player Name" autofocus="true" minlength="1">
+                <input style="font-size:12pt;" list="players" oninput="showList(this)" name="player_name" id="player_name" autocomplete = "off" align="center" placeholder="Input Name" autofocus="true">
                 <button type="submit">Submit</button>
-                <datalist id="players">
+                <datalist id="hidden"> <!-- Javascript will replace the name -->
                     <option value="Jack Harrison">
                     <option value="Christian Pulisic">
                     <option value="Joshua Sargent">    
