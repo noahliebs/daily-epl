@@ -10,7 +10,7 @@ from flask_session import Session
 from game_functions import *
 from photo_helper import *
 from guess_history import GuessHistory
-from random import sample
+from player_stats import PlayerStats
 
 from data_collection import get_live_epl_table, get_live_player_stats
 
@@ -34,8 +34,9 @@ confederation_mapping = init_confederation_mapping()
 
 
 
-headers = ["Name", "Team", "Country", "Position", "Age", "Jersey", "Goals", "Assists", "Appearances"]
-GUESS_HISTORY = "guess_history" 
+headers = ["Name", "Team", "Country", "Position", "Age", "Jersey", "Goals", "Assists"]
+GUESS_HISTORY = "guess_history"
+PLAYER_STATS = "player_stats"
 
 
 ## TODO: Make this random. Right now it's deterministic because heroku isn't stateful
@@ -45,7 +46,9 @@ def get_today():
 
 def get_todays_answer():
     today = get_today()
-    date_hash = (int(today.strftime('%Y%m%d'))) % len(available_players)
+    launch_date = datetime.datetime(2022,4,1).astimezone(pytz.timezone('US/Pacific'))
+    days_since_launch = (today - launch_date).days
+    date_hash = days_since_launch % len(available_players)
     return available_players[date_hash]
 
 
@@ -84,56 +87,86 @@ def favicon():
 def input_guess():
     today = get_today().strftime('%Y-%m-%d')
     answer = get_todays_answer_as_player()
-    if GUESS_HISTORY not in session:
-        session[GUESS_HISTORY] = {}
-    if today not in session[GUESS_HISTORY]:
-        session[GUESS_HISTORY][today] = GuessHistory(hint_config).to_json()
 
-    guess_history = GuessHistory.from_json(session[GUESS_HISTORY][today])
+
+
+    guess_history = get_guess_history(session)
+    player_stats = get_player_stats(session)
+
+
     guess_history.hint_config = hint_config
     if answer in guess_history.guesses:
         guess_history.mark_as_winner()
+
+
+    game_wasnt_finished = not is_game_over(guess_history)
         
-    if request.method == 'POST' and not is_game_over(guess_history):              
+    if request.method == 'POST' and game_wasnt_finished:              
         input_name = request.form['player_name']
         valid_names = type_ahead_helper.search_ahead(input_name)
         if len(valid_names) == 1:
             name = valid_names.pop()
             if already_guessed_player(name, guess_history):
                 messsage = """{} was already guessed""".format(name)
-                return return_response(guess_history, messsage)
+                return return_response(guess_history, player_stats, messsage)
             else:
                 guess = player_map[name]
                 process_guess(answer, guess, guess_history, epl_table, confederation_mapping)
                 session[GUESS_HISTORY][today] = guess_history.to_json()
         else:
             message =  """Relevant options: {}""".format(", ".join(valid_names))
-            return return_response(guess_history, message)
+            return return_response(guess_history, player_stats, message)
 
     if is_game_over(guess_history):
-        return return_finished(guess_history)
+        if game_wasnt_finished:
+            player_stats.finish_game(guess_history.is_winner, len(guess_history.guesses), get_today())
+            session[PLAYER_STATS] = player_stats.to_json()
+            print("STATS", session[PLAYER_STATS])
+        
+        return return_finished(guess_history, player_stats)
         
  
-    return return_response(guess_history, "")
+    return return_response(guess_history, player_stats, "")
     
 
 
-def return_response(guess_history: GuessHistory, message: str):
+def return_response(guess_history: GuessHistory, player_stats: PlayerStats, message: str):
     guess_table_data = generate_guess_table_data(guess_history)
 
     images = [get_img_data(p) for p in guess_history.guesses]
-    return render_template("game.html", headers = headers, guess_table_data = guess_table_data, message = message, images = images, guess_count = len(images), size = list(range(len(images))))
+    return render_template("game.html", headers = headers, stats = player_stats.to_json(), guess_table_data = guess_table_data, message = message, images = images, guess_count = len(images), size = list(range(len(images))))
 
 
-def return_finished(guess_history):
+def return_finished(guess_history: GuessHistory, player_stats: PlayerStats):
     answer_name = get_todays_answer()
     if guess_history.is_winner:
         message = "{} is correct!".format(answer_name)
     else:
         message = "Correct answer was: {}".format(answer_name)
         
-    return return_response(guess_history, message)
+    return return_response(guess_history, player_stats, message)
 
+
+
+
+def get_guess_history(session) -> GuessHistory:
+    today = get_today().strftime('%Y-%m-%d')
+
+    if GUESS_HISTORY not in session:
+        session[GUESS_HISTORY] = {}
+    if today not in session[GUESS_HISTORY]:
+        print(session[GUESS_HISTORY])
+        session[GUESS_HISTORY][today] = GuessHistory(hint_config).to_json()
+
+    return GuessHistory.from_json(session[GUESS_HISTORY][today])
+
+
+def get_player_stats(session) -> PlayerStats:
+    if PLAYER_STATS not in session:
+        today = get_today()
+        session[PLAYER_STATS] = PlayerStats(today).to_json()
+
+    return PlayerStats.from_json(session[PLAYER_STATS])
 
 
 def generate_guess_table_data(guess_history: GuessHistory):

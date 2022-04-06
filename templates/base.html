@@ -12,6 +12,7 @@
     </div>  -->
     <div style="display: flex;justify-content: center;" >
         <button onclick="toggleInstructions('instructions')">How To Play</button>
+        <button onclick="toggleInstructions('stats')">Your Stats</button>
         <button class="btn btn-success" onclick=" window.open('https://www.rotowire.com/soccer/depth-charts.php','_blank')">Rotowire Depth Charts ↗</button>
         <button class="btn btn-success" onclick=" window.open('https://www.premierleague.com/tables','_blank')">Live EPL Table ↗</button>
     </div>
@@ -47,6 +48,66 @@
             	<td>the true value is higher</td>
         	</tr>
     	</table>
+    </div>
+    <div id = "stats" style="display:none;">
+        <!-- <h2 style="text-align: center;">Your stats since joining us on {{ stats["first_date_played"]}} </h2> -->
+        <h2 style="text-align: center;">Your stats</h2>
+        <table width="200px" style="margin: 10 auto; margin-left:auto;margin-right:auto;"  >
+            <tr>
+                <td>Games Played</td>
+                <td>Winning %</td>
+                <td>Win Streak</td>
+                <td>Max Streak</td>
+            </tr>
+            <tr>
+                <td>{{stats["played"]}}</td>
+                {% if stats["played"] == 0 %}
+                    <td>0</td>
+                {% endif %}
+                {% if stats["performance"][0] == 0 %}
+                    <td>100</td>
+                {% else %}
+                    <td>{{parseInt((1 - stats["played"] / stats["performance"][0]) * 100)}}
+                {% endif %}
+                <td>{{stats["win_streak"]}}</td>
+                <td>{{stats["max_streak"]}}</td>
+            </tr>
+        </table>
+        <h4 style="text-align: center;">Guess Distribution</h4>
+        <table border="1" width="100px" style="margin: 0 auto; margin-left:auto;margin-right:auto;"  >
+            <tr>
+                <td>1</td>
+                <td>{{stats["performance"][1]}}</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>{{stats["performance"][2]}}</td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>{{stats["performance"][3]}}</td>
+            </tr>
+            <tr>
+                <td>4</td>
+                <td>{{stats["performance"][4]}}</td>
+            </tr>
+            <tr>
+                <td>5</td>
+                <td>{{stats["performance"][5]}}</td>
+            </tr>
+            <tr>
+                <td>6</td>
+                <td>{{stats["performance"][6]}}</td>
+            </tr>
+            <tr>
+                <td>7</td>
+                <td>{{stats["performance"][7]}}</td>
+            </tr>
+            <tr>
+                <td>8</td>
+                <td>{{stats["performance"][8]}}</td>
+            </tr>
+        </table>
     </div>
     <div>
         {% if "!" not in message and 8 > guess_count %}

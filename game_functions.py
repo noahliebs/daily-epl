@@ -26,3 +26,5 @@ def process_guess(answer: SoccerPlayer, guess: SoccerPlayer, guess_history: Gues
     guess_history.add_guess(guess)
     if (guess.get_display_name() == answer.get_display_name()):
         guess_history.mark_as_winner()
+
+    

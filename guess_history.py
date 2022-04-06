@@ -26,10 +26,10 @@ class GuessHistory(object):
             return False
         
     def guess_header(self):
-        return ["Name", "Team", "Country", "Position", "Age", "Jersey", "Goals", "Assists", "Appearances"]
+        return ["Name", "Team", "Country", "Position", "Age", "Jersey", "Goals", "Assists"]
         
     def guess_to_data(self, guess: SoccerPlayer):
-        return [guess.get_display_name(), guess.team, guess.get_country(), guess.position, guess.get_age(), guess.jersey, guess.goals, guess.assists, guess.appearances]
+        return [guess.get_display_name(), guess.team, guess.get_country(), guess.position, guess.get_age(), guess.jersey, guess.goals, guess.assists]
     
     
     def guess_to_hint(self, answer: SoccerPlayer, guess: SoccerPlayer, epl_table: EPLTable, conderation_mapping: dict):
@@ -38,12 +38,11 @@ class GuessHistory(object):
         position_hint = get_position_code(answer, guess)
         goal_hint = get_goals_code(answer, guess, self.hint_config.goal_d)
         assist_hint = get_assists_code(answer, guess, self.hint_config.assist_d)
-        app_hint = get_appearances_code(answer, guess, self.hint_config.app_d)
         country_hint = get_country_code(answer, guess, conderation_mapping)
         age_hint = get_age_code(answer, guess, self.hint_config.age_d)
         jersey_hint = get_jersey_code(answer, guess, self.hint_config.jersey_d)
         
-        return [name_code, team_hint, country_hint, position_hint, age_hint, jersey_hint, goal_hint, assist_hint, app_hint]
+        return [name_code, team_hint, country_hint, position_hint, age_hint, jersey_hint, goal_hint, assist_hint]
     
     
     def get_history_table(self, answer: SoccerPlayer, epl_table: EPLTable, confederation_mapping: dict):
