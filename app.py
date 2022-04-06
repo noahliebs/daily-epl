@@ -46,7 +46,7 @@ def get_today():
 
 def get_todays_answer():
     today = get_today()
-    launch_date = datetime.datetime(2022,4,1).astimezone(pytz.timezone('US/Pacific'))
+    launch_date = datetime.datetime(2022,4,1, tzinfo=pytz.utc).astimezone(pytz.timezone('US/Pacific'))
     days_since_launch = (today - launch_date).days
     date_hash = days_since_launch % len(available_players)
     return available_players[date_hash]
@@ -121,7 +121,6 @@ def input_guess():
         if game_wasnt_finished:
             player_stats.finish_game(guess_history.is_winner, len(guess_history.guesses), get_today())
             session[PLAYER_STATS] = player_stats.to_json()
-            print("STATS", session[PLAYER_STATS])
         
         return return_finished(guess_history, player_stats)
         
@@ -203,15 +202,18 @@ def get_img_data(player: SoccerPlayer):
 def update_epl_table():
     global epl_table
 
-    print("Updating EPL Table Stats")
+    try:
+        print("Updating EPL Table Stats")
 
-    table = get_live_epl_table()
-    with open("data/epl_table.json", "w") as f:
-        f.write(json.dumps(table))
+        table = get_live_epl_table()
+        with open("data/epl_table.json", "w") as f:
+            f.write(json.dumps(table))
 
 
-    epl_table = init_epl_table()
-    print("Done updating epl table")
+        epl_table = init_epl_table()
+        print("Done updating epl table")
+    except: 
+        print("Failed to update EPL Table")
     return "DONE"
 
 
