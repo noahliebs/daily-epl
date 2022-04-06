@@ -706,7 +706,7 @@
     <div id = "stats" style="display:block;">
         <!-- <h2 style="text-align: center;">Your stats since joining us on {{ stats["first_date_played"]}} </h2> -->
         <h2 style="text-align: center;">Your stats</h2>
-        <table width="200px" style="margin: 10 auto; margin-left:auto;margin-right:auto;"  >
+        <table id= "statsTable" width="200px" style="margin: 10 auto; margin-left:auto;margin-right:auto;"  >
             <tr>
                 <td>Games Played</td>
                 <td>Winning %</td>
@@ -717,13 +717,8 @@
                 <td>{{stats["played"]}}</td>
                 {% if stats["played"] == 0 %}
                     <td>0</td>
-                {% endif %}
-                {% if stats["played"] > 0 %}
-                    {% if stats["performance"][0] == 0 %}
-                        <td>100</td>
-                    {% else %}
-                        <td>{{parseInt((1 - stats["played"] / stats["performance"][0]) * 100)}}
-                    {% endif %}
+                {% else %}
+                    <td>{{100 - (stats["performance"][0] / stats["played"]) * 100}}
                 {% endif %}
                 <td>{{stats["win_streak"]}}</td>
                 <td>{{stats["max_streak"]}}</td>
