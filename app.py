@@ -41,12 +41,11 @@ PLAYER_STATS = "player_stats"
 
 ## TODO: Make this random. Right now it's deterministic because heroku isn't stateful
 def get_today():
-    now = datetime.datetime.now(tz=pytz.utc)
-    return now.astimezone(pytz.timezone('US/Pacific'))
+    return datetime.datetime.now(tz=pytz.timezone('US/Pacific'))
 
 def get_todays_answer():
     today = get_today()
-    launch_date = datetime.datetime(2022,4,1, tzinfo=pytz.utc).astimezone(pytz.timezone('US/Pacific'))
+    launch_date = pytz.timezone('US/Pacific').localize(datetime.datetime(2022,4,1))
     days_since_launch = (today - launch_date).days
     date_hash = days_since_launch % len(available_players)
     return available_players[date_hash]
@@ -55,7 +54,6 @@ def get_todays_answer():
 def get_todays_answer_as_player():
     name = get_todays_answer()
     return get_player_as_updated(name)
-
 
 
 # Create the Flask application
