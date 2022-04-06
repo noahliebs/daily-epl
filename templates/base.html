@@ -64,10 +64,12 @@
                 {% if stats["played"] == 0 %}
                     <td>0</td>
                 {% endif %}
-                {% if stats["performance"][0] == 0 %}
-                    <td>100</td>
-                {% else %}
-                    <td>{{parseInt((1 - stats["played"] / stats["performance"][0]) * 100)}}
+                {% if stats["played"] > 0 %}
+                    {% if stats["performance"][0] == 0 %}
+                        <td>100</td>
+                    {% else %}
+                        <td>{{parseInt((1 - stats["played"] / stats["performance"][0]) * 100)}}
+                    {% endif %}
                 {% endif %}
                 <td>{{stats["win_streak"]}}</td>
                 <td>{{stats["max_streak"]}}</td>
