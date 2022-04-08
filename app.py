@@ -40,12 +40,9 @@ PLAYER_STATS = "player_stats"
 
 
 ## TODO: Make this random. Right now it's deterministic because heroku isn't stateful
-def get_today():
-    return datetime.datetime.now(tz=pytz.timezone('US/Pacific'))
-
 def get_todays_answer():
     today = get_today()
-    launch_date = pytz.timezone('US/Pacific').localize(datetime.datetime(2022,4,1))
+    launch_date = datetime.date(2022, 4, 1)
     days_since_launch = (today - launch_date).days
     date_hash = days_since_launch % len(available_players)
     return available_players[date_hash]
@@ -83,7 +80,7 @@ def favicon():
 
 @app.route('/', methods=['GET', 'POST'])
 def input_guess():
-    today = get_today().strftime('%Y-%m-%d')
+    today = get_today().isoformat()
     answer = get_todays_answer_as_player()
 
 
@@ -117,7 +114,7 @@ def input_guess():
 
     if is_game_over(guess_history):
         if game_wasnt_finished:
-            player_stats.finish_game(guess_history.is_winner, len(guess_history.guesses), get_today())
+            player_stats.finish_game(guess_history.is_winner, len(guess_history.guesses))
             session[PLAYER_STATS] = player_stats.to_json()
         
         return return_finished(guess_history, player_stats)

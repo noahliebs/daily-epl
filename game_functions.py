@@ -6,6 +6,9 @@ from player_type_ahead import PlayerTypeAhead
 from photo_helper import display_player_photo
 from epl_table import EPLTable
 
+import datetime
+import pytz
+
 
 
 MAX_GUESSES = 8
@@ -26,5 +29,12 @@ def process_guess(answer: SoccerPlayer, guess: SoccerPlayer, guess_history: Gues
     guess_history.add_guess(guess)
     if (guess.get_display_name() == answer.get_display_name()):
         guess_history.mark_as_winner()
+
+
+
+## Make everything Pacific Timezone
+def get_today() -> datetime.date:
+    return datetime.datetime.now(tz=pytz.timezone('US/Pacific')).date()
+
 
     
