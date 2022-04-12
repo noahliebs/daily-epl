@@ -19,9 +19,37 @@ from data_collection import get_live_epl_table, get_live_player_stats
 from game_setup import *
 players = init_players()
 
+
+
+Randy_Gartside = SoccerPlayer({
+    "appearances": 0,
+    "mins_played": 0,
+    "goals": 0,
+    "assists": 0,
+    "id": 0,
+    "optaId": "na",
+    "position": "D",
+    "number": 13,
+    "nation": {
+        "isoCode": "US",
+        "country": "United States",
+        "demonym": "American"
+    },
+    "dob": 713775600000,
+    "name": {
+        "display": "That's a zero",
+        "first": "Randy",
+        "last": "Gartside"
+    },
+    "team": "Norwich City"
+})
+
+
 player_map = {}
 for p in players:
     player_map[p.get_display_name()] = p
+
+player_map[Randy_Gartside.get_display_name()] = Randy_Gartside
 
 ## Limit who's availability to be an answer
 available_players = get_players_for_selection()
@@ -105,7 +133,7 @@ def input_guess():
                 messsage = """{} was already guessed""".format(name)
                 return return_response(guess_history, player_stats, messsage)
             else:
-                guess = player_map[name]
+                guess = get_player_as_updated(name)
                 process_guess(answer, guess, guess_history, epl_table, confederation_mapping)
                 session[GUESS_HISTORY][today] = guess_history.to_json()
         else:
@@ -149,7 +177,6 @@ def get_guess_history(session) -> GuessHistory:
     if GUESS_HISTORY not in session:
         session[GUESS_HISTORY] = {}
     if today not in session[GUESS_HISTORY]:
-        print(session[GUESS_HISTORY])
         session[GUESS_HISTORY][today] = GuessHistory(hint_config).to_json()
 
     return GuessHistory.from_json(session[GUESS_HISTORY][today])
@@ -191,7 +218,11 @@ def generate_guess_table_data(guess_history: GuessHistory):
 
 
 def get_img_data(player: SoccerPlayer):
-    return base64.b64encode(get_player_photo(player).content).decode("utf-8")
+    if player.get_display_name() == Randy_Gartside.get_display_name():
+        with open("data/gartside.jpeg", "rb") as img_file:
+            return base64.b64encode(img_file.read()).decode("utf-8")
+    else:
+        return base64.b64encode(get_player_photo(player).content).decode("utf-8")
     
 
 def update_epl_table():
@@ -213,6 +244,8 @@ def update_epl_table():
 
 
 def get_player_as_updated(player_display_name):
+    if player_display_name == Randy_Gartside.get_display_name():
+        return Randy_Gartside
     raw = player_map[player_display_name].raw
     raw.update(get_live_player_stats(raw))
     return SoccerPlayer(raw)
@@ -260,7 +293,6 @@ def update_players():
 @app.route('/update_table_zz', methods=['GET', 'POST'])
 def update_table():
     update_epl_table()
-
 
 
 if __name__ == '__main__':
