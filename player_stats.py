@@ -7,6 +7,8 @@ from game_functions import get_today
 class PlayerStats(object):
 
     MAX_GUESSES = 8
+
+    # 0 indicates a failed game
     default_performance_map = { n : 0 for n in range(MAX_GUESSES + 1)}
 
     def __init__(self, first_date_played: date, win_streak: int = 0, max_streak: int = 0, performance_map: dict = default_performance_map, last_date_played: date = None):
@@ -32,7 +34,7 @@ class PlayerStats(object):
                     self.win_streak += 1
             else:
                 self.win_streak = 0
-                self.performance[0] += 1
+                self.performance_map[0] += 1
 
             self.performance_map[guess_count] += 1
             self.last_date_played = today

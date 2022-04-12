@@ -17,6 +17,9 @@ class PlayerTypeAhead(object):
 
                 root.add(p.get_first_name() + " " + p.get_last_name(), p.get_display_name())
 
+            root.add("Captain America", "Christian Pulisic") # Because why not
+            root.add("Jacquelyn", "Jack Harrison")
+
 
             self.root = root
 
